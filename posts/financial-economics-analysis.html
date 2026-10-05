@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Economics: Multi-Strategy Performance Attribution</title>
+    <link rel="icon" type="image/jpeg" href="../images/Icon.jpeg">
+
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        
+
+        
+
+        
+
+        .intro-box {
+            border-left: 4px solid var(--accent-color);
+            padding: 4px 0 4px 20px;
+            margin-bottom: 30px;
+        }
+
+        .intro-box p {
+            font-size: 1.15rem !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* Wide table for multi-column data */
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 28px;
+            font-size: 0.9rem;
+        }
+
+        .stats-table.narrow {
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats-table th {
+            background-color: #023020;
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-table th.right,
+        .stats-table td.right {
+            text-align: right;
+        }
+
+        .stats-table td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .stats-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stats-table tr:nth-child(even) td {
+            background-color: var(--accent-muted);
+        }
+
+        .stats-table td.negative {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .stats-table td.positive {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .strategy-block {
+            border-left: 3px solid var(--border-color);
+            padding: 2px 0 2px 20px;
+            margin: 20px 0 28px;
+        }
+
+        .post-tag {
+            display: inline-block;
+            background-color: var(--accent-muted);
+            color: var(--accent-color);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            margin-right: 6px;
+            margin-bottom: 16px;
+        }
+
+        .figure-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 6px 0 24px;
+        }
+
+        .post-content img {
+            display: block !important;
+            width: 72% !important;
+            height: auto;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            margin-top: 16px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+        }
+
+        .conclusion-box {
+            border-top: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+            padding: 20px 0;
+            margin: 40px 0 24px;
+        }
+
+        .conclusion-box h2 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--text-primary) !important;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .conclusion-box p {
+            color: var(--text-secondary) !important;
+            font-size: 1.05rem !important;
+            line-height: 1.8;
+        }
+
+        .academic-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        .key-finding {
+            background-color: var(--accent-muted);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 14px 18px;
+            border-radius: 0 6px 6px 0;
+            margin: 16px 0 24px;
+        }
+
+        .key-finding p {
+            margin: 0 !important;
+            font-size: 0.98rem !important;
+            color: var(--text-primary) !important;
+        }
+    </style>
+    <script>
+        (function() {
+            const storedTheme = localStorage.getItem('theme');
+            const theme = storedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+
+<body class="internal-page">
+
+        <div class="nav-bar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo-link">
+                <div class="logo">
+                    <img src="../images/Logo.png" alt="Riccardo Fin Logo">
+                    <span>Blog</span>
+                </div>
+            </a>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <!-- Sun/Moon icon injected by JS -->
+                </button>
+                <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+                    <span class="bars"></span>
+                </button>
+                <nav id="site-nav">
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../cv.html">CV</a></li>
+                        <li><a href="../blog.html" class="active">Blog posts</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <header class="page-header">
+    </header>
+
+    <main>
+        <div class="content-card">
+
+            <article>
+                <header class="post-header">
+                    <p class="post-meta">- September 2026 • Academic work</p>
+                    <h1>Financial Economics: Multi-Strategy Performance Attribution</h1>
+                </header>
+
+                <div class="post-content">
+
+                    <span class="post-tag">Active Management</span>
+                    <span class="post-tag">Factor Models</span>
+                    <span class="post-tag">Hedge Funds</span>
+                    <span class="post-tag">Currency Risk</span>
+
+                    <!-- INTRODUCTION -->
+                    <div class="intro-box">
+                        <p>
+                            What separates a skilled active manager from an expensive passive index? This post walks through five distinct empirical analyses — from a mutual fund's closet indexing to single-stock factor betas — that together paint a comprehensive picture of how performance is really generated (or destroyed) in modern portfolio management.
+                        </p>
+                    </div>
+
+                    <p>
+                        This post presents the findings of a group assignment completed for the <strong>Financial Economics (EM5021)</strong> course, as part of the Master's programme at Ca' Foscari University of Venice (A.Y. 2025/2026). The work was carried out jointly with Laura Capra and Giorgia Tessari, under the group name <em>GIORILA Financial Economics</em>. The assignment covers five interconnected analyses spanning performance attribution, style analysis, hedge fund dynamics, international currency risk, and single-stock factor modelling — all grounded in real market data and established financial theory.
+                    </p>
+
+                    <hr>
+
+                    <!-- PART A/B -->
+                    <h2>1a — Active Management vs. Closet Indexing: Fidelity Contrafund</h2>
+
+                    <p>
+                        The analysis starts with <strong>Fidelity Contrafund (FCNTX)</strong>, one of the most widely held actively managed US equity funds, evaluated over a 60-month horizon against the S&amp;P 500 benchmark.
+                    </p>
+
+                    <h3>CAPM Performance Diagnostics</h3>
+
+                    <p>
+                        A first look at the returns already raises a red flag: the fund delivered an annualized average return of <strong>9.40%</strong>, significantly trailing the benchmark's <strong>13.24%</strong>. The gap is amplified on a risk-adjusted basis, with the fund's Sharpe Ratio standing at <strong>34%</strong> — exactly half the S&amp;P 500's <strong>68%</strong>. Applying the CAPM Single Index Model reveals a Beta of <strong>1.083</strong> (a slightly more aggressive stance than the market) and an annualized Jensen's Alpha of <strong>-4.68%</strong>. This deeply negative alpha represents a clear destruction of value: the manager's active decisions have consistently detracted from what could have been achieved through simple passive exposure.
+                    </p>
+
+                    <table class="stats-table narrow">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th class="right">FCNTX</th>
+                                <th class="right">S&amp;P 500</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ann. Return</td><td class="right negative">9.40%</td><td class="right positive">13.24%</td></tr>
+                            <tr><td>Sharpe Ratio</td><td class="right negative">34%</td><td class="right positive">68%</td></tr>
+                            <tr><td>Beta (CAPM)</td><td class="right">1.083</td><td class="right">1.000</td></tr>
+                            <tr><td>Jensen's Alpha (ann.)</td><td class="right negative">-4.68%</td><td class="right">—</td></tr>
+                            <tr><td>R-squared</td><td class="right">78.47%</td><td class="right">—</td></tr>
+                        </tbody>
+                    </table>
+
+                    <img src="../images/giorila-fig-a1.png" alt="Figure A.1: Performance Analysis Measures">
+                    <p class="figure-note">Figure A.1 — Performance Analysis Measures (FCNTX vs S&amp;P 500, 60-month horizon)</p>
+
+                    <h3>Treynor-Mazuy Market Timing</h3>
+
+                    <p>
+                        The Treynor-Mazuy model is used to probe the manager's market timing ability. The Gamma coefficient of <strong>-1.50</strong> is negative, pointing to a systematic failure to increase market exposure during upturns or reduce it during downturns. This negative convexity confirms that the fund's beta was poorly calibrated to market cycles, compounding its underperformance.
+                    </p>
+
+                    <img src="../images/giorila-fig-a2.png" alt="Figure A.2: Market Timing Convexity Analysis">
+                    <p class="figure-note">Figure A.2 — Treynor-Mazuy Market Timing Convexity Analysis</p>
+
+                    <h3>Brinson Performance Attribution</h3>
+
+                    <p>
+                        Performance attribution using the Brinson model pinpoints the exact source of value erosion. Sector allocation contributed a modest positive <strong>+0.22%</strong> — the manager was, at least, in the right industries. However, this was completely overwhelmed by a security selection effect of <strong>-4.91%</strong>. The conclusion is unambiguous: the fund's underperformance is not about being in the wrong sectors, but about choosing the wrong stocks within them.
+                    </p>
+
+                    <table class="stats-table narrow">
+                        <thead>
+                            <tr>
+                                <th>Attribution Component</th>
+                                <th class="right">Contribution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Security Selection</strong></td>
+                                <td class="right negative">-4.90%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sector Allocation Contribution</strong></td>
+                                <td class="right positive">+0.22%</td>
+                            </tr>
+                            <tr style="border-top: 2px solid var(--border-color);">
+                                <td><strong>Total Excess Return</strong></td>
+                                <td class="right negative">-4.68%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="figure-note">Table A.1 — Brinson Performance Attribution Analysis</p>
+
+                    <hr>
+
+                    <h2>1b — Returns-Based Style Analysis (RBSA)</h2>
+
+                    <p>
+                        Building on the CAPM diagnostics, a returns-based style analysis (RBSA) is applied to isolate the systematic factor drivers behind the fund's returns. The objective is to construct a synthetic passive benchmark and test whether the manager adds any value above a simple combination of factor indices.
+                    </p>
+
+                    <h3>Factor Exposures &amp; Closet Indexing</h3>
+
+                    <p>
+                        Given the fund's growth-oriented composition, the primary explanatory variable chosen is the <strong>Fama-French Large Cap Growth portfolio</strong>. The model's R-squared of <strong>84.18%</strong> reveals a startling conclusion: the vast majority of the fund's return volatility is simply a byproduct of systematic growth factor exposure — not manager skill. This is a textbook case of <em>closet indexing</em>: the fund behaves like a passive style-weighted ETF while charging active management fees.
+                    </p>
+
+                    <p>
+                        To comprehensively capture all potential style exposures, the model also includes: a <strong>Large Cap Value portfolio</strong> (to detect opportunistic value tilts), <strong>MSCI Developed and Emerging Markets indices</strong> (to account for international sleeve flexibility), a <strong>custom Small Cap factor</strong> (averaging Growth, Value and Neutral small-cap portfolios), and <strong>T-bills</strong> as a proxy for defensive cash positions.
+                    </p>
+
+                    <h3>Rolling Dynamic Style Drift</h3>
+
+                    <p>
+                        A dynamic style analysis using 24 rolling windows of 36 months each confirms that the large-cap growth dominance is not a temporary tactical choice — it is structural. Throughout the entire observed period, the rolling coefficients for the growth factor remained consistently high, with <strong>minimal style drift</strong> into value or emerging markets territory.
+                    </p>
+
+                    <img src="../images/giorila-fig-b1.png" alt="Figure B.1: Dynamic Style Drift FCTNX">
+                    <p class="figure-note">Figure B.1 — Rolling Style Drift Analysis: FCNTX (24 windows × 36 months)</p>
+
+                    <p>
+                        The insistence on growth — even when this factor was declining relative to the broader market — may partly explain the negative market timing convexity observed in the Treynor-Mazuy model. Running a RBSA-based performance attribution then confirms the root cause: the style effect contributed a marginal <strong>+0.065%</strong>, but the selection effect stood at <strong>-0.44%</strong>, confirming that the manager's individual stock picks systematically underperformed within the chosen style box. Looking at factor betas for both the fund and its benchmark confirms a dramatic concentration difference — the manager placed a single-factor bet on growth, and it didn't pay off.
+                    </p>
+
+                    <hr>
+
+                    <!-- PART C -->
+                    <h2>3 — Hedge Fund Strategy Dynamics: Barclay Hedge EM vs. MSCI EM</h2>
+
+                    <p>
+                        Shifting from mutual funds to hedge fund indices, this section evaluates the <strong>Barclay Hedge Emerging Markets Global Equities Index</strong> against the <strong>MSCI Emerging Markets Index</strong> over the last 60 months.
+                    </p>
+
+                    <h3>Jensen's Alpha &amp; Risk-Adjusted Performance</h3>
+
+                    <p>
+                        The results tell a story of meaningful and consistent outperformance. The active index delivered an annualized return of <strong>8.04%</strong> against the benchmark's <strong>4.52%</strong> — and did so with <em>lower</em> volatility (11.68% vs. 15.69%). This efficient delivery of excess return translates into a <strong>Sharpe Ratio of 0.43</strong>, nearly five times higher than the benchmark's 0.09.
+                    </p>
+
+                    <table class="stats-table narrow">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th class="right">Barclay HF EM</th>
+                                <th class="right">MSCI EM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Ann. Return</td><td class="right positive">8.04%</td><td class="right">4.52%</td></tr>
+                            <tr><td>Ann. Volatility</td><td class="right positive">11.68%</td><td class="right negative">15.69%</td></tr>
+                            <tr><td>Sharpe Ratio</td><td class="right positive">0.43</td><td class="right">0.09</td></tr>
+                            <tr><td>Jensen's Alpha (ann.)</td><td class="right positive">+4.00%</td><td class="right">—</td></tr>
+                            <tr><td>Information Ratio</td><td class="right positive">1.56</td><td class="right">—</td></tr>
+                            <tr><td>Beta</td><td class="right">0.725</td><td class="right">1.000</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        A positive annualized Jensen's Alpha of <strong>+4%</strong> and an Information Ratio of <strong>1.56</strong> confirm that the value added is the result of consistent, repeatable skill rather than lucky volatility. A Beta of <strong>0.725</strong> reveals a defensive profile, providing effective capital protection during systematic market downswings.
+                    </p>
+
+                    <h3>T-Bill Cash Drag vs. Downside Protection</h3>
+
+                    <p>
+                        The RBSA yields a Style R-squared of <strong>96.13%</strong>, indicating that the index returns are almost entirely explained by its asset allocation decisions. The identified strategic weights reveal the source of the fund's risk reduction: while the core allocation remains in Emerging Markets, the index maintains a substantial buffer in <strong>T-bills</strong>, with minor allocations in Small LoBM, Developed Markets, and Small HiBM.
+                    </p>
+
+                    <div class="key-finding">
+                        <p>The T-bill position is the primary mechanism behind the fund's lower volatility compared to the pure MSCI EM benchmark. This represents a deliberate trade-off: some return drag from holding cash-equivalents, offset by meaningful downside protection during EM drawdown events.</p>
+                    </div>
+
+                    <p>
+                        The dynamic analysis using 36-month rolling windows confirms the stability of this strategy. The R-squared remains consistently above 96% across all windows, demonstrating disciplined adherence throughout the 60-month period. A marginal style drift is observed: a slight tactical increase in Large Value (BIG HiBM and BIG LoBM) and Developed Markets, compensated by a complete exit from Small HiBM positions.
+                    </p>
+
+                    <img src="../images/giorila-fig-c1.png" alt="Figure C.1: Dynamic Style Drift Hedge Fund">
+                    <p class="figure-note">Figure C.1 — Rolling Style Drift Analysis: Barclay Hedge EM Fund (36-month rolling windows)</p>
+
+                    <hr>
+
+                    <!-- PART D -->
+                    <h2>4 — Global Equities &amp; Currency Risk: MGIAX vs. MSCI EAFE</h2>
+
+                    <p>
+                        To study the effects of international diversification inside a mutual fund, the analysis turns to the <strong>MFS International Intrinsic Value Fund "Class A" (MGIAX)</strong>, a multicurrency equity mutual fund investing across developed and emerging international markets, benchmarked against the <strong>MSCI EAFE index</strong>.
+                    </p>
+
+                    <p>
+                        It is worth noting upfront a potential benchmark mismatch: the EAFE excludes the US and Canadian markets, while MGIAX holds positions in both. Still, EAFE remains the officially stated benchmark, and the active deviation from it is precisely what the attribution is designed to capture.
+                    </p>
+
+                    <h3>Country Selection vs. Currency Effect</h3>
+
+                    <p>
+                        The fund's total excess return of <strong>+0.07%</strong> is decomposed into country selection and currency effect. Country selection proved to be a <strong>marginal positive contributor (+0.014%)</strong>. The overweight in the US and Canadian markets — the two best-performing geographies — gave the fund an edge, as did the tactical shift toward UK equities. However, in allocating capital to these markets, the manager invested proportionally less in Japan, missing out on Japan's strong local equity returns. This underweight in Japan partially counteracted the gains from Canada, summing to a net country selection effect of just 0.014%.
+                    </p>
+
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Region</th>
+                                <th class="right">Country Selection</th>
+                                <th class="right">Currency Effect</th>
+                                <th class="right">Excess Return</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>UK</strong></td>
+                                <td class="right positive">0.0128%</td>
+                                <td class="right positive">0.0007%</td>
+                                <td class="right positive">0.01%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Japan</strong></td>
+                                <td class="right negative">-0.1095%</td>
+                                <td class="right positive">0.0533%</td>
+                                <td class="right negative">-0.06%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Europe</strong></td>
+                                <td class="right negative">-0.0211%</td>
+                                <td class="right">0.0000%</td>
+                                <td class="right negative">-0.02%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Canada</strong></td>
+                                <td class="right positive">0.0968%</td>
+                                <td class="right negative">-0.0047%</td>
+                                <td class="right positive">0.09%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>USA</strong></td>
+                                <td class="right positive">0.0521%</td>
+                                <td class="right positive">0.0029%</td>
+                                <td class="right positive">0.06%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EM (proxy)</strong></td>
+                                <td class="right negative">-0.0167%</td>
+                                <td class="right">0.0000%</td>
+                                <td class="right negative">-0.02%</td>
+                            </tr>
+                            <tr style="border-top: 2px solid var(--border-color);">
+                                <td><strong>Total</strong></td>
+                                <td class="right positive">0.0144%</td>
+                                <td class="right positive">0.0521%</td>
+                                <td class="right positive">0.067%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="figure-note">Table D.1 — MGIAX Country Selection &amp; Currency Effect Breakdown</p>
+
+                    <h3>EUR vs. Local Currency Efficient Frontier</h3>
+
+                    <p>
+                        The more structurally significant finding concerns <strong>currency risk</strong>. Japan suffered substantial yen depreciation over the 5-year period, systematically eroding the benchmark's EUR-denominated returns. Because MGIAX held relatively less yen in favour of currencies that appreciated, its returns were meaningfully less affected — this is a direct result of active currency exposure management.
+                    </p>
+
+                    <p>
+                        To quantify the structural impact of currency conversion on portfolio construction, the analysis compares the covariance matrices of country index returns in <strong>local currency versus EUR</strong> across five markets: UK, Japan, Switzerland, Canada, and USA.
+                    </p>
+
+                    <table class="stats-table narrow">
+                        <thead>
+                            <tr>
+                                <th>Frontier Metric</th>
+                                <th class="right">Local Currency</th>
+                                <th class="right">EUR Terms</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Min-Variance Volatility (monthly)</td><td class="right">~2.53%</td><td class="right negative">&gt; 2.53%</td></tr>
+                            <tr><td>Min-Var Weight Concentration</td><td class="right">UK &amp; Japan</td><td class="right">UK &amp; USA</td></tr>
+                            <tr><td>Cross-market correlation</td><td class="right">Moderate</td><td class="right negative">Higher</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        In local currency, correlations across markets are moderate and reflect independent economic cycles. The minimum-variance portfolio achieves a monthly volatility of approximately <strong>2.53%</strong>, concentrated in UK and Japan. Converting returns to euros systematically increases variances and cross-market covariances, as exchange rate fluctuations introduce a <strong>common factor</strong> that amplifies co-movements. The EUR efficient frontier shifts outward — the same target return requires accepting higher volatility — and optimal weights shift away from Japan toward the USA.
+                    </p>
+
+                    <div class="key-finding">
+                        <p>Japan's local equity returns look attractive, but currency losses systematically reduced EUR-denominated performance. This is a critical insight for European investors allocating internationally: what looks efficient in local terms may not be efficient in home-currency terms.</p>
+                    </div>
+
+                    <img src="../images/giorila-fig-d2.png" alt="Figure D.2: Currency Effect on the Efficient Frontier">
+                    <p class="figure-note">Figure D.2 — Currency Effect on the Efficient Frontier (Local vs EUR)</p>
+
+                    <hr>
+
+                    <!-- PART E -->
+                    <h2>5 — Single-Stock Factor Attribution: Fama-French 3-Factor Regression</h2>
+
+                    <p>
+                        The final section applies the <strong>Fama-French three-factor model</strong> to four individual US stocks: <strong>NVIDIA</strong>, <strong>Alphabet (Class C)</strong>, <strong>Pfizer</strong>, and <strong>Walmart</strong>. Each stock's excess returns are regressed against the three primary factors — Market (Mkt-RF), Size (SMB), and Value (HML) — to identify factor loadings, alpha significance, and R-squared.
+                    </p>
+
+                    <h3>Alpha &amp; Arbitrage Opportunities</h3>
+
+                    <p>
+                        Across the four stocks, only <strong>NVIDIA</strong> exhibits a statistically notable alpha — and therefore the closest thing to a potential arbitrage opportunity in the sample. However, the p-value of <strong>0.077</strong> prevents reaching absolute statistical certainty. For Alphabet, Pfizer, and Walmart, alphas are not statistically significant (p-values far exceed conventional thresholds), indicating no identifiable systematic mispricing.
+                    </p>
+
+                    <h3>Factor Betas by Stock</h3>
+
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stock</th>
+                                <th class="right">Alpha (p-val)</th>
+                                <th class="right">Mkt-RF β</th>
+                                <th class="right">HML β (Value)</th>
+                                <th class="right">R²</th>
+                                <th>Key Insight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>NVIDIA</strong></td>
+                                <td class="right positive">High (0.077)</td>
+                                <td class="right">High</td>
+                                <td class="right negative">Negative***</td>
+                                <td class="right">Moderate</td>
+                                <td>Strong Growth tilt; near-significant alpha</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alphabet</strong></td>
+                                <td class="right">Insig.</td>
+                                <td class="right">Moderate</td>
+                                <td class="right negative">Negative</td>
+                                <td class="right negative">Low</td>
+                                <td>Growth stock; high idiosyncratic risk</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pfizer</strong></td>
+                                <td class="right">Insig.</td>
+                                <td class="right negative">Very Neg.***</td>
+                                <td class="right">—</td>
+                                <td class="right negative">Very Low</td>
+                                <td>Total market decoupling; idiosyncratic</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Walmart</strong></td>
+                                <td class="right">Insig.</td>
+                                <td class="right">—</td>
+                                <td class="right">—</td>
+                                <td class="right negative">Lowest</td>
+                                <td>Minimally explained by FF factors</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="strategy-block">
+                        <h3>NVIDIA</h3>
+                        <p>
+                            NVIDIA's factor profile confirms its position as a high-conviction growth play. A highly statistically significant <strong>negative HML beta</strong> confirms that it systematically outperforms when growth stocks beat value stocks. The elevated (near-significant) alpha at p = 0.077 suggests that even beyond its pure growth factor exposure, there may be additional residual return — consistent with NVIDIA's extraordinary business performance in the AI semiconductor cycle.
+                        </p>
+                    </div>
+
+                    <div class="strategy-block">
+                        <h3>Alphabet</h3>
+                        <p>
+                            Alphabet also exhibits a negative HML beta, confirming its growth stock classification. However, the low R-squared indicates that the Fama-French factors explain relatively little of its return variance — the company's performance is more heavily driven by idiosyncratic factors (regulatory developments, AI monetization, specific business cycles) than by systematic market dynamics.
+                        </p>
+                    </div>
+
+                    <div class="strategy-block">
+                        <h3>Pfizer</h3>
+                        <p>
+                            Pfizer displays a remarkably negative and highly statistically significant market beta, pointing to a near-complete decoupling from the broad market index. This is consistent with the company's post-pandemic dynamics — as vaccine revenues normalized and pipeline concerns emerged, Pfizer's price moved in ways largely uncorrelated with market-wide factor movements. The very low R-squared reinforces that Fama-French factors offer little explanatory power for this stock.
+                        </p>
+                    </div>
+
+                    <div class="strategy-block">
+                        <h3>Walmart</h3>
+                        <p>
+                            Walmart presents the lowest R-squared among the four stocks, confirming how defensive consumer staples companies are structurally insulated from market factor dynamics. None of the computed betas reach conventional significance thresholds, reflecting Walmart's relatively steady demand profile, insulated from the growth/value cycles and market swings that dominate Fama-French factor returns.
+                        </p>
+                    </div>
+
+                    <div class="conclusion-box">
+                        <h2>Conclusion</h2>
+                        <p>
+                            Taken together, these five analyses illuminate a recurring theme: <strong>factor exposure explains far more than active skill in most institutional investment contexts</strong>. Fidelity Contrafund's dismal alpha, despite its premium fees, underscores the challenge of genuinely beating the market through stock selection. In contrast, the Barclay Hedge EM fund demonstrates that disciplined risk management — primarily through T-bill buffers — can generate consistent risk-adjusted outperformance without excessive idiosyncratic bets. The international analysis highlights a less-discussed dimension of performance attribution: currency risk can silently erode or enhance returns independently of equity skill, reshaping the entire efficient frontier from a European investor's perspective. Finally, the single-stock regressions serve as a reminder that even within a well-established framework like Fama-French, individual company dynamics — driven by technology cycles, patent cliffs, or consumer resilience — frequently dominate systematic factors, leaving a significant portion of returns unexplained.
+                        </p>
+                    </div>
+
+                    <p class="academic-note">
+                        This post is based on the group assignment "GIORILA Financial Economics," completed for the Financial Economics (EM5021) course, Master's programme, Ca' Foscari University of Venice, A.Y. 2025/2026. Group members: Laura Capra (894472), Giorgia Tessari (896551), Riccardo Fin (896637).
+                    </p>
+
+                </div>
+
+                <hr>
+
+                <a href="../blog.html" style="font-weight: bold;">← Back to Blog List</a>
+
+            </article>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <p>You're a recruiter? Contact me!</p>
+                <strong>Email:</strong> <a href="mailto:riccardo.fin@gmail.com">riccardo.fin@gmail.com</a>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="https://www.linkedin.com/in/riccardo-fin-376503292" target="_blank">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Riccardo Fin. Built with HTML and CSS.
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>
