@@ -7,28 +7,46 @@
     
     <link rel="icon" type="image/jpeg" href="../images/Icon.jpeg">
     <link rel="stylesheet" href="../style.css"> 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            const storedTheme = localStorage.getItem('theme');
+            const theme = storedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 
 <body class="internal-page">
 
-   <header class="page-header">
-    <div class="logo">
-        <img src="../images/Logo.png" alt="Riccardo Fin Logo">
-        <span>BLOG</span>
+       <div class="nav-bar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo-link">
+                <div class="logo">
+                    <img src="../images/Logo.png" alt="Riccardo Fin Logo">
+                    <span>Blog</span>
+                </div>
+            </a>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <!-- Sun/Moon icon injected by JS -->
+                </button>
+                <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+                    <span class="bars"></span>
+                </button>
+                <nav id="site-nav">
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../cv.html">CV</a></li>
+                        <li><a href="../blog.html" class="active">Blog posts</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
-    <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
-        <span class="bars" aria-hidden="true"></span>
-        Menu
-    </button>
-    <nav id="site-nav">
-        <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../cv.html">CV</a></li>
-            <li><a href="../blog.html" class="active">Blog posts</a></li>
-        </ul>
-    </nav>
-</header>
+
+    <header class="page-header">
+    </header>
 
     <main>
         <div class="content-card">
@@ -41,7 +59,7 @@
                 
                 <div class="post-content">
                     
-                    <p class="lead" style="font-size: 1.2rem; border-left: 4px solid var(--accent-color); padding-left: 20px; color: #333; margin-bottom: 40px; line-height: 1.6;">
+                    <p class="lead" style="font-size: 1.2rem; border-left: 4px solid var(--accent-color); padding-left: 20px; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.6;">
                         This summary outlines the key findings of the thesis titled "The Digital Revolution of Neo-Brokers: The New Face of the Retail Investor," which explores how digital platforms have transformed financial market participation.
                     </p>
 
@@ -96,9 +114,9 @@
                         The thesis concludes that while the digital revolution has successfully increased financial inclusion and autonomy, it has also introduced systemic risks and vulnerabilities. The "democratization" of finance requires a new balance between innovation, investor education, and updated regulatory frameworks.
                     </p>
 
-                <!--<div style="background-color: #f9f9f9; padding: 30px; border-radius: 8px; margin-top: 50px; text-align: center; border: 1px solid #eee;">
+                <!--<div style="background-color: var(--accent-muted); padding: 30px; border-radius: 8px; margin-top: 50px; text-align: center; border: 1px solid var(--border-color);">
                         <h4 style="margin-bottom: 15px;">Read the full Thesis</h4>
-                        <p style="margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-secondary);">
                             Includes full data analysis on PFOF and behavioral finance studies. (only in Italian)
                         </p>
                         <a href="#" style="background-color: var(--accent-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block; transition: background 0.3s;">Download PDF ↓</a>
